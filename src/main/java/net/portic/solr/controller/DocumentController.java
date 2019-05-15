@@ -2,10 +2,10 @@ package net.portic.solr.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
+import net.portic.solr.dto.SearchDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,6 +66,11 @@ public class DocumentController {
     @PostMapping("/document")
     public Document createDocument(@RequestBody Document document) {
         return repository.save(document);
+    }
+
+    @PostMapping("/document/find")
+    public Iterable<Document> findDocument(@RequestBody SearchDTO searchDTO) {
+        return repository.findAll(searchDTO.getSearchTerm());
     }
 
     @PutMapping("/document")
