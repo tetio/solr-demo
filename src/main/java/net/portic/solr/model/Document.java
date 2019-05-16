@@ -12,6 +12,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -64,5 +66,13 @@ public class Document {
 	private String ownerId;
 	@Field
 	private String username;
+	@Field
+	private String docNumber;
+	@Field
+	private String docVersion;
+	@Field
+	private Date created;
+	@Field
+	private Date updated;
 
 }

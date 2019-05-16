@@ -1,6 +1,8 @@
 package net.portic.solr.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -21,6 +23,10 @@ public class DocumentController {
     @PostConstruct
     public void addDocuments() {
         List<Document> documents = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+        Date now = cal.getTime();
+        cal.add(Calendar.MONTH, -1);
+        Date aMonthAgo = cal.getTime();
         documents.add(Document.builder()
                 .id("123")
                 .booking("BK-0001-8981771")
@@ -28,6 +34,8 @@ public class DocumentController {
                 .equipmentNumbers(new String[]{"MACU0099881"})
                 .ownerId("QA331122111")
                 .username("jsmith")
+                .created(aMonthAgo)
+                .updated(aMonthAgo)
                 .build());
 
         documents.add(Document.builder()
@@ -36,6 +44,8 @@ public class DocumentController {
                 .equipmentRefs(new String[]{"REF1"})
                 .ownerId("QA331122111")
                 .username("jsmith")
+                .created(aMonthAgo)
+                .updated(aMonthAgo)
                 .build());
         documents.add(Document.builder()
                 .id("332")
@@ -43,6 +53,8 @@ public class DocumentController {
                 .equipmentRefs(new String[]{"REF1", "REF3"})
                 .ownerId("QA331122111")
                 .username("jdow")
+                .created(aMonthAgo)
+                .updated(aMonthAgo)
                 .build());
         documents.add(Document.builder()
                 .id("545")
@@ -51,6 +63,8 @@ public class DocumentController {
                 .equipmentRefs(new String[]{"REF1", "REF12"})
                 .ownerId("QZ7778888")
                 .username("hpotter")
+                .created(aMonthAgo)
+                .updated(aMonthAgo)
                 .build());
         documents.add(Document.builder()
                 .id("346")
@@ -59,8 +73,19 @@ public class DocumentController {
                 .equipmentRefs(new String[]{"REF1", "REF12"})
                 .ownerId("QZ7778888")
                 .username("hpotter")
+                .created(aMonthAgo)
+                .updated(aMonthAgo)
                 .build());
-
+        documents.add(Document.builder()
+                .id("223")
+                .shipCall("99999")
+                .booking("55555")
+                .equipmentRefs(new String[]{"REF1", "REF12"})
+                .ownerId("QZ7778888")
+                .username("hpotter")
+                .created(now)
+                .updated(now)
+                .build());
         repository.saveAll(documents);
 
     }
