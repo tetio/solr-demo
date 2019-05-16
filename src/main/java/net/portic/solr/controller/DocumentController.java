@@ -20,32 +20,45 @@ public class DocumentController {
 
     @PostConstruct
     public void addDocuments() {
-
         List<Document> documents = new ArrayList<>();
-        documents.add(new Document()
-                .builder()
-                .id(123L)
+        documents.add(Document.builder()
+                .id("123")
                 .booking("BK-0001-8981771")
                 .equipmentRefs(new String[]{"REF1"})
+                .equipmentNumbers(new String[]{"MACU0099881"})
+                .ownerId("QA331122111")
+                .username("jsmith")
                 .build());
 
-        documents.add(new Document()
-                .builder()
-                .id(223L)
+        documents.add(Document.builder()
+                .id("223")
                 .booking("BK-0001-89817233")
                 .equipmentRefs(new String[]{"REF1"})
+                .ownerId("QA331122111")
+                .username("jsmith")
                 .build());
-        documents.add(new Document()
-                .builder()
-                .id(332L)
+        documents.add(Document.builder()
+                .id("332")
                 .booking("BK-0001-89817222")
                 .equipmentRefs(new String[]{"REF1", "REF3"})
+                .ownerId("QA331122111")
+                .username("jdow")
                 .build());
-        documents.add(new Document()
-                .builder()
-                .id(345L)
+        documents.add(Document.builder()
+                .id("545")
+                .shipCall("55555")
                 .booking("BK-0001-89817322")
                 .equipmentRefs(new String[]{"REF1", "REF12"})
+                .ownerId("QZ7778888")
+                .username("hpotter")
+                .build());
+        documents.add(Document.builder()
+                .id("346")
+                .shipCall("33445")
+                .booking("55555")
+                .equipmentRefs(new String[]{"REF1", "REF12"})
+                .ownerId("QZ7778888")
+                .username("hpotter")
                 .build());
 
         repository.saveAll(documents);
@@ -70,7 +83,14 @@ public class DocumentController {
 
     @PostMapping("/document/find")
     public Iterable<Document> findDocument(@RequestBody SearchDTO searchDTO) {
-        return repository.findAll(searchDTO.getSearchTerm());
+        if (isSuperUser(searchDTO.getOwnerId())) {
+            return repository.findAll(searchDTO.getSearchTerm());
+        }
+        return repository.findAll(searchDTO.getSearchTerm(), searchDTO.getOwnerId());
+    }
+
+    private boolean isSuperUser(String ownerId) {
+        return ("A100000001".equalsIgnoreCase(ownerId));
     }
 
     @PutMapping("/document")

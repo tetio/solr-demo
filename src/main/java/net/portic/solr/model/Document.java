@@ -12,28 +12,27 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@SolrDocument(collection = "documents")
+@SolrDocument(collection = "e_documents")
 public class Document {
 
 	@Id
 	@Field
-	@Indexed(name = "docid", type = "long")
-	private Long id;
+	private String id;
 	@Field
-	private Long expedientId;
+	private String expedientId;
 	@Field
-	private Integer expedientVersion;
+	private String expedientVersion;
 	@Field
+//	@Indexed(name = "booking", type = "string")
 	private String booking;
 	@Field
-	private String BL;
+	private String bl;
 	@Field
+//	@Indexed(name = "shipCall", type = "string")
 	private String shipCall;
 	@Field
 	private String[] equipmentNumbers;
@@ -61,4 +60,9 @@ public class Document {
 	private String haulierName;
 	@Field
 	private String haulierId;
+	@Field
+	private String ownerId;
+	@Field
+	private String username;
+
 }
