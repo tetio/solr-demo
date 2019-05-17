@@ -4,10 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
 
@@ -27,6 +24,7 @@ public class DocumentController {
 
     @PostConstruct
     public void addDocuments() {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         List<Document> documents = new ArrayList<>();
         LocalDateTime ldtnow = LocalDateTime.now();
         Date now = Date.from(ldtnow.atZone(ZoneId.systemDefault()).toInstant());
@@ -102,8 +100,7 @@ public class DocumentController {
 
     @GetMapping("/document/{id}")
     public Document getDocument(@PathVariable Integer id) {
-        Document doc = repository.findById(id).orElse(null);
-        return doc;
+        return repository.findById(id).orElse(null);
     }
 
     @PostMapping("/document")
