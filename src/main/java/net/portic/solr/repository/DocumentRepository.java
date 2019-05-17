@@ -4,6 +4,8 @@ import org.springframework.data.solr.repository.Query;
 import org.springframework.data.solr.repository.SolrCrudRepository;
 import net.portic.solr.model.Document;
 
+import java.util.Date;
+
 public interface DocumentRepository extends SolrCrudRepository<Document, Integer> {
 
     Iterable<Document> findAllByShipCall(String value);
@@ -13,4 +15,11 @@ public interface DocumentRepository extends SolrCrudRepository<Document, Integer
     Iterable<Document> findAll(String value);
 
     @Query("ownerId:?1 AND (booking:?0 OR shipCall:?0 OR equipmentNumbers:?0 OR equipmentRefs:?0)")
-    Iterable<Document> findAll(String value, String owner);}
+    Iterable<Document> findAll(String value, String owner);
+
+    @Query(" updated:[?0 TO ?1]")
+    Iterable<Document> findAllDate(String fromDate, String toDate);
+
+    @Query("ownerId:?1 AND updated:[?1 TO ?2] ")
+    Iterable<Document> findAllDate(String ownerId, String fromDate, String toDate);
+}

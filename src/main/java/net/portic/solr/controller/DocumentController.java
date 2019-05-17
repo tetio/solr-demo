@@ -1,5 +1,7 @@
 package net.portic.solr.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,6 +11,7 @@ import javax.annotation.PostConstruct;
 
 import net.portic.solr.dto.SearchDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.solr.core.convert.DateTimeConverters;
 import org.springframework.web.bind.annotation.*;
 
 import net.portic.solr.model.Document;
@@ -19,7 +22,7 @@ import net.portic.solr.repository.DocumentRepository;
 public class DocumentController {
     @Autowired
     private DocumentRepository repository;
-
+/*
     @PostConstruct
     public void addDocuments() {
         List<Document> documents = new ArrayList<>();
@@ -89,7 +92,7 @@ public class DocumentController {
         repository.saveAll(documents);
 
     }
-
+*/
     @GetMapping("/document")
     public Iterable<Document> getAll() {
         return repository.findAll();
@@ -106,8 +109,16 @@ public class DocumentController {
         return repository.save(document);
     }
 
-    @PostMapping("/document/find")
-    public Iterable<Document> findDocument(@RequestBody SearchDTO searchDTO) {
+    @PostMapping("/document/finddate")
+    public Iterable<Document> findDocumenDatet(@RequestBody SearchDTO searchDTO) {
+        if (isSuperUser(searchDTO.getOwnerId())) {
+            return repository.findAllDate(DateTimeConverters.JavaDateConverter.INSTANCE.convert(searchDTO.getFromDate()), DateTimeConverters.JavaDateConverter.INSTANCE.convert(searchDTO.getToDate()));
+        }
+        return repository.findAllDate(searchDTO.getOwnerId(), DateTimeConverters.JavaDateConverter.INSTANCE.convert(searchDTO.getFromDate()), DateTimeConverters.JavaDateConverter.INSTANCE.convert(searchDTO.getToDate()));
+    }
+
+    @PostMapping("/document/findcriteria")
+    public Iterable<Document> findDocumentCriteria(@RequestBody SearchDTO searchDTO) {
         if (isSuperUser(searchDTO.getOwnerId())) {
             return repository.findAll(searchDTO.getSearchTerm());
         }
