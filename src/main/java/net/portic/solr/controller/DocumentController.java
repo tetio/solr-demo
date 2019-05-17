@@ -1,6 +1,8 @@
 package net.portic.solr.controller;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,14 +24,14 @@ import net.portic.solr.repository.DocumentRepository;
 public class DocumentController {
     @Autowired
     private DocumentRepository repository;
-/*
+
     @PostConstruct
     public void addDocuments() {
         List<Document> documents = new ArrayList<>();
-        Calendar cal = Calendar.getInstance();
-        Date now = cal.getTime();
-        cal.add(Calendar.MONTH, -1);
-        Date aMonthAgo = cal.getTime();
+        LocalDateTime ldtnow = LocalDateTime.now();
+        Date now = Date.from(ldtnow.atZone(ZoneId.systemDefault()).toInstant());
+        LocalDateTime ldtaMonthAgo = ldtnow.minusMonths(1);
+        Date aMonthAgo = Date.from(ldtaMonthAgo.atZone(ZoneId.systemDefault()).toInstant());
         documents.add(Document.builder()
                 .id("123")
                 .booking("BK-0001-8981771")
@@ -92,7 +94,7 @@ public class DocumentController {
         repository.saveAll(documents);
 
     }
-*/
+
     @GetMapping("/document")
     public Iterable<Document> getAll() {
         return repository.findAll();
@@ -112,9 +114,9 @@ public class DocumentController {
     @PostMapping("/document/finddate")
     public Iterable<Document> findDocumenDatet(@RequestBody SearchDTO searchDTO) {
         if (isSuperUser(searchDTO.getOwnerId())) {
-            return repository.findAllDate(DateTimeConverters.JavaDateConverter.INSTANCE.convert(searchDTO.getFromDate()), DateTimeConverters.JavaDateConverter.INSTANCE.convert(searchDTO.getToDate()));
+            return repository.findAllDate(searchDTO.getFromDate(), searchDTO.getToDate());
         }
-        return repository.findAllDate(searchDTO.getOwnerId(), DateTimeConverters.JavaDateConverter.INSTANCE.convert(searchDTO.getFromDate()), DateTimeConverters.JavaDateConverter.INSTANCE.convert(searchDTO.getToDate()));
+        return repository.findAllDate(searchDTO.getOwnerId(), searchDTO.getFromDate(), searchDTO.getToDate());
     }
 
     @PostMapping("/document/findcriteria")

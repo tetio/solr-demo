@@ -18,8 +18,8 @@ public interface DocumentRepository extends SolrCrudRepository<Document, Integer
     Iterable<Document> findAll(String value, String owner);
 
     @Query("updated:[?0 TO ?1]")
-    Iterable<Document> findAllDate(String fromDate, String toDate);
+    Iterable<Document> findAllDate(Date fromDate, Date toDate);
 
     @Query("ownerId:?0 AND updated:[?1 TO ?2] ")
-    Iterable<Document> findAllDate(String ownerId, String fromDate, String toDate);
+    Iterable<Document> findAllDate(String ownerId, Date fromDate, Date toDate);
 }
