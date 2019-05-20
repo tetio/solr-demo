@@ -65,7 +65,7 @@ public class DocumentController {
     }
 
 
-    @PostConstruct
+    //@PostConstruct
     public void addDocuments() {
         List<Document> documents = new ArrayList<>();
         LocalDateTime ldtnow = LocalDateTime.now();

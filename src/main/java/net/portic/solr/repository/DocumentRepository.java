@@ -16,7 +16,7 @@ public interface DocumentRepository extends SolrCrudRepository<Document, Integer
     @Query("booking:?0 OR shipCall:?0 OR equipmentNumbers:?0 OR equipmentRefs:?0 OR username:?0")
     Iterable<Document> findAll(String value);
 
-    @Query("ownerId:?1 AND (booking:?0 OR shipCall:?0 OR equipmentNumbers:?0 OR equipmentRefs:?0)")
+    @Query("ownerId:?1 AND (booking:?0 OR shipCall:?0 OR equipmentNumbers:?0 OR equipmentRefs:?0 OR username:?0)")
     Iterable<Document> findAll(String value, String owner);
 
     @Query("updated:[?0 TO ?1]")
