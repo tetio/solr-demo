@@ -793,6 +793,7 @@
     </lst>
   </initParams>
 
+
   <!-- Solr Cell Update Request Handler
 
        http://wiki.apache.org/solr/ExtractingRequestHandler
@@ -807,6 +808,13 @@
     </lst>
   </requestHandler>
 
+
+
+    <requestHandler name="/update" class="solr.UpdateRequestHandler">
+        <lst name="defaults">
+            <str name="update.chain">uuid</str>
+        </lst>
+    </requestHandler>
   <!-- Search Components
 
        Search components are registered to SolrCore and used by
@@ -1193,6 +1201,13 @@
     <processor class="solr.DistributedUpdateProcessorFactory"/>
     <processor class="solr.RunUpdateProcessorFactory"/>
   </updateRequestProcessorChain>
+
+    <updateRequestProcessorChain name="uuid">
+        <processor class="solr.UUIDUpdateProcessorFactory">
+            <str name="fieldName">id</str>
+        </processor>
+        <processor class="solr.RunUpdateProcessorFactory" />
+    </updateRequestProcessorChain>
 
   <!-- Deduplication
 

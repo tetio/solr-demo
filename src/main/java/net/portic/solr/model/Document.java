@@ -1,10 +1,7 @@
 package net.portic.solr.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.apache.solr.client.solrj.beans.Field;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.solr.core.mapping.SolrDocument;
@@ -19,6 +16,7 @@ import java.util.Date;
 public class Document {
 
     @Id
+    @Generated
     @Field
     private String id;
     @Field

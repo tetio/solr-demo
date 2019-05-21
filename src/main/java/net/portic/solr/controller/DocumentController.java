@@ -65,7 +65,7 @@ public class DocumentController {
     }
 
 
-    //@PostConstruct
+    @PostConstruct
     public void addDocuments() {
         List<Document> documents = new ArrayList<>();
         LocalDateTime ldtnow = LocalDateTime.now();
@@ -73,7 +73,6 @@ public class DocumentController {
         LocalDateTime ldtaMonthAgo = ldtnow.minusMonths(1);
         Date aMonthAgo = Date.from(ldtaMonthAgo.atZone(ZoneId.systemDefault()).toInstant());
         documents.add(Document.builder()
-                .id("123")
                 .booking("BK-0001-8981771")
                 .equipmentRefs(new String[]{"REF1"})
                 .equipmentNumbers(new String[]{"MACU0099881"})
@@ -84,7 +83,6 @@ public class DocumentController {
                 .build());
 
         documents.add(Document.builder()
-                .id("223")
                 .booking("BK-0001-89817233")
                 .equipmentRefs(new String[]{"REF1"})
                 .ownerId("QA331122111")
@@ -93,7 +91,6 @@ public class DocumentController {
                 .updated(aMonthAgo)
                 .build());
         documents.add(Document.builder()
-                .id("332")
                 .booking("BK-0001-89817222")
                 .equipmentRefs(new String[]{"REF1", "REF3"})
                 .ownerId("QA331122111")
@@ -102,7 +99,6 @@ public class DocumentController {
                 .updated(aMonthAgo)
                 .build());
         documents.add(Document.builder()
-                .id("545")
                 .shipCall("55555")
                 .booking("BK-0001-89817322")
                 .equipmentRefs(new String[]{"REF1", "REF12"})
@@ -112,7 +108,6 @@ public class DocumentController {
                 .updated(aMonthAgo)
                 .build());
         documents.add(Document.builder()
-                .id("346")
                 .shipCall("33445")
                 .booking("55555")
                 .equipmentRefs(new String[]{"REF1", "REF12"})
@@ -122,7 +117,6 @@ public class DocumentController {
                 .updated(aMonthAgo)
                 .build());
         documents.add(Document.builder()
-                .id("223")
                 .shipCall("99999")
                 .booking("55555")
                 .equipmentRefs(new String[]{"REF1", "REF12"})
@@ -137,7 +131,7 @@ public class DocumentController {
         Document document;
         String ownerId = "QZ7778888";
         Date when;
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 10; i++) {
             if (i % 5 == 0) {
                 ownerId = "QA331122111";
             } else {
@@ -145,7 +139,6 @@ public class DocumentController {
             }
             when = faker.date().past(faker.number().numberBetween(1, 1000), TimeUnit.DAYS);
             document = Document.builder()
-                    .id(faker.idNumber().valid())
                     .shipCall("" + faker.number().numberBetween(10000, 100000))
                     .booking(faker.idNumber().valid())
                     .equipmentNumbers(new String[]{faker.random().hex(3) + "U" + faker.number().digits((7)), faker.random().hex(3) + "U" + faker.number().digits((7))})

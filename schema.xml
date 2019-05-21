@@ -2,6 +2,7 @@
 <!-- Solr managed schema - automatically generated - DO NOT EDIT -->
 <schema name="default-config" version="1.6">
   <uniqueKey>id</uniqueKey>
+  <fieldType name="uuid" class="solr.UUIDField" indexed="true" />
   <fieldType name="_nest_path_" class="solr.NestPathField" omitTermFreqAndPositions="true" omitNorms="true" maxCharsForDocValues="-1" stored="false"/>
   <fieldType name="ancestor_path" class="solr.TextField">
     <analyzer type="index">
@@ -448,7 +449,7 @@
     </analyzer>
   </fieldType>
   <field name="_nest_path_" type="_nest_path_"/>
-  <field name="_root_" type="string" docValues="false" indexed="true" stored="false"/>
+  <field name="_root_" type="uuid" docValues="false" indexed="true" stored="false"/>
   <field name="_text_" type="text_general" multiValued="true" indexed="true" stored="false"/>
   <field name="_version_" type="plong" indexed="false" stored="false"/>
 
@@ -456,7 +457,7 @@
   <field name="equipmentNumbers" type="strings" indexed="true" stored="true"/>
   <field name="equipmentRefs" type="strings" indexed="true" stored="true"/>
   <field name="goodCodes" type="strings" indexed="true" stored="true"/>
-  <field name="id" type="string"  indexed="true" required="true" stored="true"/>
+  <field name="id" type="uuid" indexed="true" required="true" stored="true" multiValued="false"/>
   <field name="shipCall" type="string" indexed="true"  stored="true"/>
   <field name="expedientId" type="string" indexed="true"  stored="true"/>
   <field name="expedientVersion" type="string" indexed="true"  stored="true"/>
@@ -477,7 +478,6 @@
   <field name="docVersion" type="string" indexed="true"  stored="true"/>
   <field name="created" type="pdate" indexed="true"  stored="true"/>
   <field name="updated" type="pdate" indexed="true"  stored="true"/>
-
 
 
 
