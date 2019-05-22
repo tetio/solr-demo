@@ -1,28 +1,29 @@
 package net.portic.solr.controller;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.PostConstruct;
-
 import com.github.javafaker.Faker;
 import net.portic.solr.dto.SearchDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.solr.core.convert.DateTimeConverters;
-import org.springframework.web.bind.annotation.*;
-
 import net.portic.solr.model.Document;
 import net.portic.solr.repository.DocumentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 @RestController
 public class DocumentController {
     @Autowired
     private DocumentRepository repository;
+
+    private Pageable pageRequest = PageRequest.of(0,20);
 
     @GetMapping("/document")
     public Iterable<Document> getAll() {
@@ -42,17 +43,17 @@ public class DocumentController {
     @PostMapping("/document/finddate")
     public Iterable<Document> findDocumenDatet(@RequestBody SearchDTO searchDTO) {
         if (isSuperUser(searchDTO.getOwnerId())) {
-            return repository.findAllDate(searchDTO.getFromDate(), searchDTO.getToDate());
+            return repository.findAllDate(searchDTO.getFromDate(), searchDTO.getToDate(), pageRequest).getContent();
         }
-        return repository.findAllDate(searchDTO.getOwnerId(), searchDTO.getFromDate(), searchDTO.getToDate());
+        return repository.findAllDate(searchDTO.getOwnerId(), searchDTO.getFromDate(), searchDTO.getToDate(), pageRequest).getContent();
     }
 
     @PostMapping("/document/findcriteria")
     public Iterable<Document> findDocumentCriteria(@RequestBody SearchDTO searchDTO) {
         if (isSuperUser(searchDTO.getOwnerId())) {
-            return repository.findAll(searchDTO.getSearchTerm());
+            return repository.findAll(searchDTO.getSearchTerm(), pageRequest).getContent();
         }
-        return repository.findAll(searchDTO.getSearchTerm(), searchDTO.getOwnerId());
+        return repository.findAll(searchDTO.getSearchTerm(), searchDTO.getOwnerId(), pageRequest).getContent();
     }
 
     private boolean isSuperUser(String ownerId) {
@@ -65,88 +66,40 @@ public class DocumentController {
     }
 
 
-    @PostConstruct
+    //@PostConstruct
     public void addDocuments() {
-        List<Document> documents = new ArrayList<>();
-        LocalDateTime ldtnow = LocalDateTime.now();
-        Date now = Date.from(ldtnow.atZone(ZoneId.systemDefault()).toInstant());
-        LocalDateTime ldtaMonthAgo = ldtnow.minusMonths(1);
-        Date aMonthAgo = Date.from(ldtaMonthAgo.atZone(ZoneId.systemDefault()).toInstant());
-        documents.add(Document.builder()
-                .booking("BK-0001-8981771")
-                .equipmentRefs(new String[]{"REF1"})
-                .equipmentNumbers(new String[]{"MACU0099881"})
-                .ownerId("QA331122111")
-                .username("jsmith")
-                .created(aMonthAgo)
-                .updated(aMonthAgo)
-                .build());
-
-        documents.add(Document.builder()
-                .booking("BK-0001-89817233")
-                .equipmentRefs(new String[]{"REF1"})
-                .ownerId("QA331122111")
-                .username("jsmith")
-                .created(aMonthAgo)
-                .updated(aMonthAgo)
-                .build());
-        documents.add(Document.builder()
-                .booking("BK-0001-89817222")
-                .equipmentRefs(new String[]{"REF1", "REF3"})
-                .ownerId("QA331122111")
-                .username("jdow")
-                .created(aMonthAgo)
-                .updated(aMonthAgo)
-                .build());
-        documents.add(Document.builder()
-                .shipCall("55555")
-                .booking("BK-0001-89817322")
-                .equipmentRefs(new String[]{"REF1", "REF12"})
-                .ownerId("QZ7778888")
-                .username("hpotter")
-                .created(aMonthAgo)
-                .updated(aMonthAgo)
-                .build());
-        documents.add(Document.builder()
-                .shipCall("33445")
-                .booking("55555")
-                .equipmentRefs(new String[]{"REF1", "REF12"})
-                .ownerId("QZ7778888")
-                .username("hpotter")
-                .created(aMonthAgo)
-                .updated(aMonthAgo)
-                .build());
-        documents.add(Document.builder()
-                .shipCall("99999")
-                .booking("55555")
-                .equipmentRefs(new String[]{"REF1", "REF12"})
-                .ownerId("QZ7778888")
-                .username("hpotter")
-                .created(now)
-                .updated(now)
-                .build());
-        repository.saveAll(documents);
-
         Faker faker = new Faker();
         Document document;
-        String ownerId = "QZ7778888";
+        String ownerId;
         Date when;
-        for (int i = 0; i < 10; i++) {
+        Date today;
+        for (int i = 0; i < 10000; i++) {
             if (i % 5 == 0) {
                 ownerId = "QA331122111";
             } else {
                 ownerId = "QZ7778888";
             }
             when = faker.date().past(faker.number().numberBetween(1, 1000), TimeUnit.DAYS);
+            today = faker.date().past(faker.number().numberBetween(1, 120), TimeUnit.MINUTES);
             document = Document.builder()
                     .shipCall("" + faker.number().numberBetween(10000, 100000))
                     .booking(faker.idNumber().valid())
                     .equipmentNumbers(new String[]{faker.random().hex(3) + "U" + faker.number().digits((7)), faker.random().hex(3) + "U" + faker.number().digits((7))})
                     .equipmentRefs(new String[]{"REF" + faker.number().digits(4), "REF" + faker.number().digits(4)})
+                    .terminalId("CAT"+faker.number().numberBetween(10000000, 99999999))
+                    .terminalName(faker.company().name())
+                    .depotId("CAD"+faker.number().numberBetween(10000000, 99999999))
+                    .depotName(faker.company().name())
+                    .shippingAgentId("CAS"+faker.number().numberBetween(10000000, 99999999))
+                    .shippingAgentName(faker.company().name())
+                    .forwarderId("CAF"+faker.number().numberBetween(10000000, 99999999))
+                    .forwarderName(faker.company().name())
+                    .haulierId("CAH"+faker.number().numberBetween(10000000, 99999999))
+                    .haulierName(faker.company().name())
                     .ownerId(ownerId)
                     .username(faker.pokemon().name())
                     .created(when)
-                    .updated(when)
+                    .updated(today)
                     .build();
             repository.save(document);
         }

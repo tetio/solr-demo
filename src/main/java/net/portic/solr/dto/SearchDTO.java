@@ -1,16 +1,14 @@
 package net.portic.solr.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+//@Data
+//@Builder
+//@AllArgsConstructor
+//@NoArgsConstructor
+@Getter
 public class SearchDTO {
     String ownerId;
     String searchTerm;

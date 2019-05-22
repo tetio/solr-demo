@@ -1,6 +1,7 @@
 package net.portic.solr.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.apache.solr.client.solrj.beans.Field;
 import org.springframework.data.annotation.Id;
@@ -12,6 +13,7 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @SolrDocument(collection = "e_documents")
 public class Document {
 
@@ -20,16 +22,33 @@ public class Document {
     @Field
     private String id;
     @Field
-    private String expedientId;
+    private String draftId;
+    // file is "expedient" in catalan
     @Field
-    private String expedientVersion;
+    private String fileId;
     @Field
-//	@Indexed(name = "booking", type = "string")
+    private String fileVersion;
+    @Field
+    private String documentId;
+    @Field
+    private String documentVersion;
+    @Field
+    private String ownerId;
+    @Field
+    private String username;
+    @Field
+    @JsonFormat(timezone = "UTC", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private Date created;
+    @Field
+    @JsonFormat(timezone = "UTC", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private Date updated;
+
+    // Functional fields
+    @Field
     private String booking;
     @Field
     private String bl;
     @Field
-//	@Indexed(name = "shipCall", type = "string")
     private String shipCall;
     @Field
     private String[] equipmentNumbers;
@@ -57,19 +76,5 @@ public class Document {
     private String haulierName;
     @Field
     private String haulierId;
-    @Field
-    private String ownerId;
-    @Field
-    private String username;
-    @Field
-    private String docNumber;
-    @Field
-    private String docVersion;
-    @Field
-    @JsonFormat(timezone = "UTC", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    private Date created;
-    @Field
-    @JsonFormat(timezone = "UTC", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-    private Date updated;
 
 }
